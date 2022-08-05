@@ -11,12 +11,14 @@ def main():
 
     # input number of samples
     st.sidebar.number_input("Number of samples",10,100000,value=100,key="sample")
-    total_tp = np.int(ss.ratio * ss.sample)
-    total_tn = np.int(ss.sample - total_tp)  
 
     # button for balance ratio
     balance_ratio = np.arange(0.1,0.6,0.1).round(1)
     st.sidebar.radio("Balance Ratio", options=balance_ratio, index=4, key='ratio')
+    
+    # calculate tp and tn
+    total_tp = np.int(ss.ratio * ss.sample)
+    total_tn = np.int(ss.sample - total_tp)  
     
     # slider for changing the TP/FP/TN/FN
     tp = st.sidebar.slider("True Positive", 0, total_tp, value=total_tp//2, key='tp')
