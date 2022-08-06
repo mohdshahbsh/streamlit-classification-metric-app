@@ -38,8 +38,8 @@ def main():
 
     # PERFORMANCE METRIC
     right_col.markdown(f"$Accuracy = {(tp+tn)/(tp+tn+fp+fn):0.1%}$%")
-    right_col.markdown(f"$Balanced Accuracy = {((tp/(tp+fn))+(tn/(tn+fp)))/2:0.1%}$%")
-    right_col.markdown(f"$Jaccard Index = {(tp/(tp+fp+fn)):0.1%}$%")    
+    right_col.markdown(f"$Balanced\,Accuracy = {((tp/(tp+fn))+(tn/(tn+fp)))/2:0.1%}$%")
+    right_col.markdown(f"$Jaccard\,Index = {(tp/(tp+fp+fn)):0.1%}$%")    
     right_col.markdown(f"$F1-Score = {(tp/(tp+0.5*(fp+fn))):0.1%}$%")
     right_col.markdown(f"$Sensitivity = {tp/(tp+fn):0.1%}$%")
     right_col.markdown(f"$Specificity\,= {tn/(tn+fp):0.1%}$%")
