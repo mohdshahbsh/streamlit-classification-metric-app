@@ -37,15 +37,91 @@ def main():
     left_col.pyplot(fig_cm)
 
     # PERFORMANCE METRIC
-    right_col.markdown(f"$Accuracy = {(tp+tn)/(tp+tn+fp+fn):0.1%}$%")
-    right_col.markdown(f"$Balanced\,Accuracy = {((tp/(tp+fn))+(tn/(tn+fp)))/2:0.1%}$%")
-    right_col.markdown(f"$Jaccard\,Index = {(tp/(tp+fp+fn)):0.1%}$%")    
-    right_col.markdown(f"$F1-Score = {(tp/(tp+0.5*(fp+fn))):0.1%}$%")
-    right_col.markdown(f"$Sensitivity = {tp/(tp+fn):0.1%}$%")
-    right_col.markdown(f"$Specificity\,= {tn/(tn+fp):0.1%}$%")
-    right_col.markdown(f"$Precision_1\,= {tp/(tp+fp):0.1%}$%") 
-    right_col.markdown(f"$Precision_0\,= {tn/(tn+fn):0.1%}$%")
-       
+    fig_tp = trellis_plot(tp,tn,fp,fn)
+    right_col.pyplot(fig_tp)
+    
+    metric_df = pd.DataFrame({
+        "Metric" : [ 
+            "Accuracy",
+            "Balanced Accuracy",
+            "Jaccard Index",
+            "F1-Score",
+            "Recall_0",
+            "Recall_1",
+            "Precision_0",
+            "Precision_1",
+        ],
+        "Score" : [
+            (tp+tn)/(tp+tn+fp+fn), # Accuracy
+            ((tp/(tp+fn))+(tn/(tn+fp)))/2, # Bal.Acc
+            (tp/(tp+fp+fn)), # Jaccard
+            (tp/(tp+0.5*(fp+fn))), # F1
+            tn/(tn+fp), # recall 0
+            tp/(tp+fn), # recall 1
+            (tn/(tn+fn)), # precision 0
+            tp/(tp+fp), # precision 1
+        ]
+    })
+    st.table(metric_df)
+
+def trellis_plot(tp,tn,fp,fn):
+    # Trellis Plot for Classification Metric
+    fig_tp, ax = plt.subplots(figsize=(8,9))
+    
+    y1_axis = [
+        "Accuracy",
+        "Balanced Accuracy",
+        "Jaccard Index",
+        "F1-Score",
+        "Recall",
+        "Precision"
+    ]
+    y0_axis = ["Precision","Recall"]
+    x0_axis = [
+        (tn/(tn+fn)),
+        tn/(tn+fp)
+    ]
+    x1_axis = [
+        (tp+tn)/(tp+tn+fp+fn),
+        ((tp/(tp+fn))+(tn/(tn+fp)))/2,
+        (tp/(tp+fp+fn)),
+        (tp/(tp+0.5*(fp+fn))),
+        tp/(tp+fn),
+        tp/(tp+fp)
+    ]
+
+    ## label 1 plot
+    ax.plot(x1_axis, y1_axis, 'o', 
+        markersize=14,
+        color = 'white',
+        markeredgecolor = "steelblue",
+        markeredgewidth = 4,
+    )
+
+    ## label 0 plot
+    ax.plot(x0_axis,y0_axis, 'o',
+        markersize=14,
+        color = 'white',
+        markeredgecolor = "coral",
+        markeredgewidth = 4,
+       )
+
+    plt.title("Performance Metric", fontsize=18, pad=12, loc="left",)
+    sns.despine()
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.xlim(0,1.1)
+    plt.grid(axis='y', alpha=0.5)
+    ## configure legend for the label markers
+    plt.legend(
+        labels = ['Label 1','Label 0'],
+        loc = 'upper right',
+        bbox_to_anchor = (1.2,1.0),
+        borderpad = 1.2,
+        labelspacing = 1.2
+    )
+
+    return fig_tp      
 
 if __name__ == "__main__":
     main()
